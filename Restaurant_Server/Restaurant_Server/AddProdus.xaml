@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Restaurant_Server.AddProdus">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Inregistrati-va!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Entry x:Name="txtden" Placeholder="Denumire"/>
+            <Entry x:Name="txtcant" Placeholder="Cantitate"/>
+            <Entry x:Name="txtpret" Placeholder="Pret"/>
+            <Switch x:Name="alerg" IsToggled="false" />
+            <Button Text="Salveaza" Clicked="OnButtonSave"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
