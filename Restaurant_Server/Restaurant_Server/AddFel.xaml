@@ -5,8 +5,12 @@
     <ContentPage.Content>
         <StackLayout>
             <Entry x:Name="txtnume" Placeholder="Denumire"/>
-            <Entry x:Name="txtdurata" Placeholder="Cantitate"/>
+            <Entry x:Name="txtdurata" Placeholder="Durata"/>
             <Switch x:Name="instoc" IsToggled="true" />
+            <Label Text="Pretul total al produselor" />
+            <Label x:Name="pretproduse" />
+            <Entry x:Name="txtadaos" Placeholder="Adaos" Text="0" TextChanged="AddValueperTotal" Keyboard="Numeric"/>
+            <Label x:Name="prettotal" Text="0"/>
             <ListView x:Name="listaProduse" BackgroundColor="Aqua" ItemSelected="OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>

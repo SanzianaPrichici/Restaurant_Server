@@ -15,14 +15,7 @@ namespace Restaurant_Server
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddFel : ContentPage
     {
-        private ObservableCollection<Produs> _prod;
-        public ObservableCollection<Produs> Produse
-        {
-            get
-            {
-                return _prod ?? (_prod = new ObservableCollection<Produs>());
-            }
-        }
+        
         public AddFel()
         {
            InitializeComponent();
@@ -32,34 +25,73 @@ namespace Restaurant_Server
             base.OnAppearing();
             listaProduse.ItemsSource = await App.Database.GetProduseAsync();
             listaProduseFel.ItemsSource = new List<Produs>();
+            float pretp = 0;
+            prettotal.Text = pretp.ToString();
+            foreach (Produs p in listaProduseFel.ItemsSource)
+            {
+                pretp += p.Pret;
+            }
+            pretproduse.Text = pretp.ToString();
         }
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem != null)
             {
-                List<Produs> L=await App.Database.ViewProduse((List<Produs>)listaProduse.ItemsSource,(Produs)e.SelectedItem);
+                Produs prod = (Produs)e.SelectedItem;
+                List<Produs> L=await App.Database.ViewProduse((List<Produs>)listaProduse.ItemsSource,prod);
                 listaProduse.ItemsSource = null;
                 listaProduse.ItemsSource = L;
-                //await Adauga((Produs)e.SelectedItem);
                 List<Produs> L2 = (List<Produs>)listaProduseFel.ItemsSource;
-                L2.Add((Produs)e.SelectedItem);
+                L2.Add(prod);
                 listaProduseFel.ItemsSource = null;
                 listaProduseFel.ItemsSource = L2;
+                float pret = float.Parse(pretproduse.Text);
+                pret += prod.Pret;
+                pretproduse.Text = pret.ToString();
+                try
+                {
+                    pret = float.Parse(prettotal.Text);
+                    pret = float.Parse(txtadaos.Text) + float.Parse(pretproduse.Text);
+                    prettotal.Text = pret.ToString();
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(@"Ceva nu e ok", ex.Message);
+                }
             }
         }
         async void OnItem2Selected(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem != null)
             {
-                List<Produs> L = await App.Database.ViewProduse((List<Produs>)listaProduseFel.ItemsSource, (Produs)e.SelectedItem);
+                Produs prod = (Produs)e.SelectedItem;
+                List<Produs> L = await App.Database.ViewProduse((List<Produs>)listaProduseFel.ItemsSource, prod);
                 listaProduseFel.ItemsSource = null;
                 listaProduseFel.ItemsSource = L;
-                //await Adauga((Produs)e.SelectedItem);
                 List<Produs> L2 = (List<Produs>)listaProduse.ItemsSource;
-                L2.Add((Produs)e.SelectedItem);
+                L2.Add(prod);
                 listaProduse.ItemsSource = null;
                 listaProduse.ItemsSource = L2;
+                float pret = float.Parse(pretproduse.Text);
+                pret -= prod.Pret;
+                pretproduse.Text = pret.ToString();
+                pret = float.Parse(prettotal.Text);
+                pret = float.Parse(txtadaos.Text) + float.Parse(pretproduse.Text);
+                prettotal.Text = pret.ToString();
             }
+        }
+        async void AddValueperTotal(object sender, TextChangedEventArgs e)
+        {
+            float prett = 0;
+            try
+            {
+                prett = float.Parse(txtadaos.Text);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            prettotal.Text = (prett + float.Parse(pretproduse.Text)).ToString();
         }
         async protected void SalvareFel(object sender, EventArgs a)
         {
@@ -67,7 +99,8 @@ namespace Restaurant_Server
             {
                 Nume = txtnume.Text,
                 Durata = float.Parse(txtdurata.Text),
-                InStoc = instoc.IsToggled
+                InStoc = instoc.IsToggled,
+                Pret=float.Parse(prettotal.Text)
             };
             string s= await App.Database.SaveFeluriAsync(fel);
             string nr = new string(s.Reverse().ToArray());

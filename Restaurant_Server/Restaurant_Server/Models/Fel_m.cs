@@ -10,5 +10,6 @@ namespace Restaurant_Server.Models
         public string Nume { get; set; }
         public float Durata { get; set; }
         public bool InStoc { get; set; }
+        public float Pret { get; set; }
     }
 }
