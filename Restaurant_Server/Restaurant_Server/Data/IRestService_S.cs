@@ -18,11 +18,14 @@ namespace Restaurant_Server.Data
         Task DeleteUserAsync(int id);
         //Implementare FELURI DE MANCARE
         Task<List<Fel_m>> RefreshDataAsyncFEL();
-        Task SaveFelAsync(Fel_m item, bool isNewItem);
+        Task<string> SaveFelAsync(Fel_m item, bool isNewItem);
         Task DeleteFelAsync(int id);
         //Implementare PRODUSE
         Task<List<Produs>> RefreshDataAsyncPROD();
         Task SaveProdusAsync(Produs item, bool isNewItem);
         Task DeleteProdusAsync(int id);
+        Task<List<Produs>> SortProduse(List<Produs> L,Produs P);
+        //Implementare Feluri+Produse
+        Task SaveFel_ProdAsync(Fel_Prods item, bool isNewItem);
     }
 }

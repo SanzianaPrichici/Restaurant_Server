@@ -15,6 +15,7 @@ namespace Restaurant_Server.Data
         readonly string RestUrlUSR = "https://api-lic.conveyor.cloud/api/Users/";
         readonly string RestUrlFEL = "https://api-lic.conveyor.cloud/api/Fels/";
         readonly string RestUrlPROD = "https://api-lic.conveyor.cloud/api/Produs/";
+        readonly string RestUrlFP = "https://api-lic.conveyor.cloud/api/Fel_Prod/";
         public List<Client> Clients { get; private set; }
         public List<User> Users { get; private set; }
         public List<Fel_m> Feluri { get; private set; }
@@ -111,6 +112,18 @@ namespace Restaurant_Server.Data
             }
             return Produse;
         }
+        public async Task<List<Produs>> SortProduse(List<Produs> L, Produs P)
+        {
+            Produse = L;
+            List<Produs> Copie = new List<Produs>(Produse);
+            foreach (Produs x in Copie)
+            {
+                Console.WriteLine(x.Denumire);
+                if (x.ID == P.ID)
+                    Produse.Remove(x);
+            }
+            return Produse;
+        }
         // Salvare Client
         public async Task<string> SaveClientAsync(Client item, bool isNewItem = true)
         {
@@ -128,7 +141,6 @@ namespace Restaurant_Server.Data
                 else
                 {
                     response = await client.PutAsync(uri, content);
-                    return response.Headers.Location.ToString();
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
                 if (response.IsSuccessStatusCode)
@@ -144,10 +156,40 @@ namespace Restaurant_Server.Data
             return null;
         }
         //Salvare fel de mancare
-        public async Task SaveFelAsync(Fel_m item, bool isNewItem = true)
+        public async Task<string> SaveFelAsync(Fel_m item, bool isNewItem = true)
         {
             Console.WriteLine(@"Am ajuns la URL");
             Uri uri = new Uri(string.Format(RestUrlFEL, string.Empty));
+            try
+            {
+                string json = JsonConvert.SerializeObject(item);
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = null;
+                if (isNewItem)
+                {
+                    response = await client.PostAsync(uri, content);
+                }
+                else
+                {
+                    response = await client.PutAsync(uri, content);
+                }
+                Console.WriteLine(response.IsSuccessStatusCode.ToString());
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(@"S-a salvat felul.");
+                    return response.Headers.Location.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(@"Felul nu poate fi salvat", ex.Message);
+            }
+            return null;
+        }
+        public async Task SaveFel_ProdAsync(Fel_Prods item, bool isNewItem = true)
+        {
+            Console.WriteLine(@"Am ajuns la URL");
+            Uri uri = new Uri(string.Format(RestUrlFP, string.Empty));
             try
             {
                 string json = JsonConvert.SerializeObject(item);

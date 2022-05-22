@@ -40,10 +40,14 @@ namespace Restaurant_Server.Data
         {
             return restService.SaveUserAsync(item, isNewItem);
         }
-        public Task SaveFeluriAsync(Fel_m item, bool isNewItem = true)
+        public Task<string> SaveFeluriAsync(Fel_m item, bool isNewItem = true)
         {
             Console.WriteLine(@"Am ajuns in baza de date");
             return restService.SaveFelAsync(item, isNewItem);
+        }
+        public Task SaveFPAsync(Fel_Prods item, bool isNewItem = true)
+        {
+            return restService.SaveFel_ProdAsync(item, isNewItem);
         }
         public Task SaveProduseAsync(Produs item, bool isNewItem = true)
         {
@@ -64,6 +68,10 @@ namespace Restaurant_Server.Data
         public Task DeleteProduseAsync(Produs item)
         {
             return restService.DeleteProdusAsync(item.ID);
+        }
+        public Task<List<Produs>> ViewProduse(List<Produs> L, Produs P1)
+        {
+            return restService.SortProduse(L, P1);
         }
     }
 }

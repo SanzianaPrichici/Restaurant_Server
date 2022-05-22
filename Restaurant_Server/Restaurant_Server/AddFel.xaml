@@ -4,6 +4,9 @@
              x:Class="Restaurant_Server.AddFel">
     <ContentPage.Content>
         <StackLayout>
+            <Entry x:Name="txtnume" Placeholder="Denumire"/>
+            <Entry x:Name="txtdurata" Placeholder="Cantitate"/>
+            <Switch x:Name="instoc" IsToggled="true" />
             <ListView x:Name="listaProduse" BackgroundColor="Aqua" ItemSelected="OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -11,13 +14,14 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <ListView x:Name="listaProduseFel" BackgroundColor="Brown" >
+            <ListView x:Name="listaProduseFel" BackgroundColor="Brown" ItemSelected="OnItem2Selected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Denumire}" Detail="{Binding ID}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button Text="Salveaza" Clicked="SalvareFel"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
