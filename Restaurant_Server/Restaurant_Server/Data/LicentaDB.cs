@@ -73,5 +73,9 @@ namespace Restaurant_Server.Data
         {
             return restService.SortProduse(L, P1);
         }
+        public Task SaveMasaAsync(Masa item, bool isNewItem = true)
+        {
+            return restService.SaveMasaAsync(item, isNewItem);
+        }
     }
 }

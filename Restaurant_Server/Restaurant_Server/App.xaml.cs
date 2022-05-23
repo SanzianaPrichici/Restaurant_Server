@@ -14,7 +14,7 @@ namespace Restaurant_Server
 
             Database = new LicentaDB(new RestService_S());
             //MainPage = new MainPage();
-            MainPage = new AddFel();
+            MainPage = new AddMasa();
             //MainPage = new Page1();
         }
 

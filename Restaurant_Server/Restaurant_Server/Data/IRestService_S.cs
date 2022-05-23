@@ -27,5 +27,9 @@ namespace Restaurant_Server.Data
         Task<List<Produs>> SortProduse(List<Produs> L,Produs P);
         //Implementare Feluri+Produse
         Task SaveFel_ProdAsync(Fel_Prods item, bool isNewItem);
+        //Implementare Mese
+        Task<List<Masa>> RefreshDataAsyncMASA();
+        Task SaveMasaAsync(Masa item, bool isNewItem);
+        Task DeleteMasaAsync(int id);
     }
 }
