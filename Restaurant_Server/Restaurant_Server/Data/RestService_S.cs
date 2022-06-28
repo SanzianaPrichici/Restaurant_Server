@@ -188,10 +188,18 @@ namespace Restaurant_Server.Data
             List<Comanda> c2 = new List<Comanda>(Comenzi);
             foreach (Comanda c in c2)
             {
-                if (c.Status.ToUpper() != "IN_PREPARARE" || c.Status.Length == 0)
+                try
                 {
-                    Console.WriteLine("*");
-                    Comenzi.Remove(c); Console.WriteLine(c.Status); Console.WriteLine(c.ID);
+                    if (c.Status.ToUpper() != "IN_PREPARARE")
+                    {
+                        Console.WriteLine("*");
+                        Comenzi.Remove(c); Console.WriteLine(c.Status); Console.WriteLine(c.ID);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("!");
+                    Comenzi.Remove(c);
                 }
             }
             foreach (Comanda c in Comenzi)

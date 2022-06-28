@@ -7,10 +7,8 @@
         <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
             <Button Text="Vizualizează comenzile în preparare" CornerRadius="10" TextColor="GreenYellow" BackgroundColor="#4D5656" BorderWidth="1" HorizontalOptions="CenterAndExpand" Clicked="Orders"/>
         </Frame>
-        <Button Text="Vizualizează lista clienților" CornerRadius="10" TextColor="DarkOrange" BackgroundColor="#4D5656" BorderWidth="1" HorizontalOptions="CenterAndExpand" Clicked="Clients"/>
         <Button Text="Vizualizează lista produselor" CornerRadius="10" TextColor="DarkOrange" BackgroundColor="#4D5656" BorderWidth="1" HorizontalOptions="CenterAndExpand" Clicked="Products"/>
         <Button Text="Vizualizează lista felurilor de mâncare" CornerRadius="10" TextColor="DarkOrange" BackgroundColor="#4D5656" BorderWidth="1" HorizontalOptions="CenterAndExpand" Clicked="Dishes"/>
         <Button Text="Vizualizează lista meselor" CornerRadius="10" TextColor="DarkOrange" BackgroundColor="#4D5656" BorderWidth="1" HorizontalOptions="CenterAndExpand" Clicked="Tables"/>
     </StackLayout>
-
 </ContentPage>

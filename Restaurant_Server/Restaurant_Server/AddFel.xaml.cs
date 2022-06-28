@@ -27,6 +27,7 @@ namespace Restaurant_Server
             txtnume.Text = f.Nume;
             txtdurata.Text = f.Durata.ToString();
             prettotal.Text = f.Pret.ToString();
+            instoc.IsToggled = f.InStoc;
             listaProduse.ItemsSource = await App.Database.GetProduseNUAsync(f.ID);
             listaProduseFel.ItemsSource = await App.Database.GetProduseFelAsync(f.ID);
             Console.WriteLine("Am ieist din BD");

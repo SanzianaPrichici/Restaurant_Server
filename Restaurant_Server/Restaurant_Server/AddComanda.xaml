@@ -4,9 +4,23 @@
              x:Class="Restaurant_Server.AddComanda">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Label x:Name="txtID1" Text="ID:"/>
+            <Label x:Name="txtID" Text="{Binding ID}"/>
+            <Label x:Name="txtCLIID1" Text="Clientul atribuit:"/>
+            <Label x:Name="txtCLIID" Text="{Binding ID_CLI}"/>
+            <Label x:Name="txtM1" Text="Masa atribuita:"/>
+            <Label x:Name="txtM" Text="{Binding ID_Masa}"/>
+            <Label x:Name="txtSuma1" Text="Suma:"/>
+            <Label x:Name="txtSuma" Text="{Binding Suma}"/>
+            <Label x:Name="txtStatus1" Text="Status comanda:"/>
+            <Label x:Name="txtStatus" Text="{Binding Status}"/>
+            <ListView x:Name="listView" Margin="20">
+                <ListView.ItemTemplate >
+                    <DataTemplate>
+                        <TextCell Text="{Binding Denumire}" Detail="{Binding Pret}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
