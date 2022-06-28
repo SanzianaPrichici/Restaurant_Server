@@ -17,11 +17,14 @@ namespace Restaurant_Server.Data
         readonly string RestUrlPROD = "https://api-lic.conveyor.cloud/api/Produs/";
         readonly string RestUrlFP = "https://api-lic.conveyor.cloud/api/Fel_Prod/";
         readonly string RestUrlMASA = "https://api-lic.conveyor.cloud/api/Masas/";
+        readonly string RestUrlCOM = "https://api-lic.conveyor.cloud/api/Comandas/";
         public List<Client> Clients { get; private set; }
         public List<User> Users { get; private set; }
         public List<Fel_m> Feluri { get; private set; }
         public List<Produs> Produse { get; private set; }
         public List<Masa> Mese { get; private set; }
+        public List<Fel_Prods> FP { get; private set; }
+        public List<Comanda> Comenzi { get; private set; }
         public RestService_S()
         {
             var httpClientHandler = new HttpClientHandler();
@@ -114,6 +117,37 @@ namespace Restaurant_Server.Data
             }
             return Produse;
         }
+        public async Task<List<Fel_Prods>> RefreshDataAsyncFELP(int id)
+        {
+            FP = new List<Fel_Prods>();
+
+            Uri uri = new Uri(string.Format(RestUrlFP, string.Empty));
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(@"Am ajuns la feluri_prod");
+                    string content = await response.Content.ReadAsStringAsync();
+                    FP = JsonConvert.DeserializeObject<List<Fel_Prods>>(content);
+                    List<Fel_Prods> Copie = new List<Fel_Prods>(FP);
+                    Console.WriteLine(id.ToString());
+                    foreach (Fel_Prods x in Copie)
+                    {
+                        Console.WriteLine(x.ID.ToString());
+                        Console.WriteLine(x.FID.ToString());
+                        Console.WriteLine(x.PID.ToString());
+                        if (x.FID != id)
+                            FP.Remove(x);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(@"Eroare afisare feluri_prod", ex.Message);
+            }
+            return FP;
+        }
         //Afisare Mese
         public async Task<List<Masa>> RefreshDataAsyncMASA()
         {
@@ -125,7 +159,7 @@ namespace Restaurant_Server.Data
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    Produse = JsonConvert.DeserializeObject<List<Produs>>(content);
+                    Mese = JsonConvert.DeserializeObject<List<Masa>>(content);
                 }
             }
             catch (Exception ex)
@@ -134,20 +168,60 @@ namespace Restaurant_Server.Data
             }
             return Mese;
         }
+        public async Task<List<Comanda>> RefreshDataAsyncCOM()
+        {
+            Comenzi = new List<Comanda>();
+            Uri uri = new Uri(string.Format(RestUrlCOM, string.Empty));
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    Comenzi = JsonConvert.DeserializeObject<List<Comanda>>(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(@"Eroare afisare Mese", ex.Message);
+            }
+            List<Comanda> c2 = new List<Comanda>(Comenzi);
+            foreach (Comanda c in c2)
+            {
+                if (c.Status.ToUpper() != "IN_PREPARARE" || c.Status.Length == 0)
+                {
+                    Console.WriteLine("*");
+                    Comenzi.Remove(c); Console.WriteLine(c.Status); Console.WriteLine(c.ID);
+                }
+            }
+            foreach (Comanda c in Comenzi)
+            {
+                Console.WriteLine(c.ID);
+                Console.WriteLine(c.Status);
+            }
+            return Comenzi;
+        }
         public async Task<List<Produs>> SortProduse(List<Produs> L, Produs P)
         {
-            Produse = L;
+            Console.Write("Sunt in SOrt");
+            Produse = new List<Produs>(L);
             List<Produs> Copie = new List<Produs>(Produse);
+            List<Produs> Copie2 = new List<Produs>(Produse);
             foreach (Produs x in Copie)
             {
                 Console.WriteLine(x.Denumire);
                 if (x.ID == P.ID)
+                {
+                    Console.WriteLine("Am sters");
+                    Console.WriteLine(x.Denumire);
                     Produse.Remove(x);
+                }
             }
+            Console.Write("Am iesit din SOrt");
             return Produse;
         }
         // Salvare Client
-        public async Task<string> SaveClientAsync(Client item, bool isNewItem = true)
+        public async Task<string> SaveClientAsync(Client item, bool isNewItem)
         {
             Console.WriteLine(@"Am ajuns la URL");
             Uri uri = new Uri(string.Format(RestUrlCLI, string.Empty));
@@ -162,6 +236,7 @@ namespace Restaurant_Server.Data
                 }
                 else
                 {
+                    uri = new Uri(uri.ToString()+item.ID);
                     response = await client.PutAsync(uri, content);
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
@@ -178,7 +253,7 @@ namespace Restaurant_Server.Data
             return null;
         }
         //Salvare fel de mancare
-        public async Task<string> SaveFelAsync(Fel_m item, bool isNewItem = true)
+        public async Task<string> SaveFelAsync(Fel_m item, bool isNewItem)
         {
             Console.WriteLine(@"Am ajuns la URL");
             Uri uri = new Uri(string.Format(RestUrlFEL, string.Empty));
@@ -193,6 +268,7 @@ namespace Restaurant_Server.Data
                 }
                 else
                 {
+                    uri = new Uri(uri.ToString() + item.ID);
                     response = await client.PutAsync(uri, content);
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
@@ -208,7 +284,7 @@ namespace Restaurant_Server.Data
             }
             return null;
         }
-        public async Task SaveFel_ProdAsync(Fel_Prods item, bool isNewItem = true)
+        public async Task SaveFel_ProdAsync(Fel_Prods item, bool isNewItem)
         {
             Console.WriteLine(@"Am ajuns la URL");
             Uri uri = new Uri(string.Format(RestUrlFP, string.Empty));
@@ -223,6 +299,7 @@ namespace Restaurant_Server.Data
                 }
                 else
                 {
+                    uri = new Uri(uri.ToString() + item.ID);
                     response = await client.PutAsync(uri, content);
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
@@ -237,7 +314,7 @@ namespace Restaurant_Server.Data
             }
         }
         //Salvare produs
-        public async Task SaveProdusAsync(Produs item, bool isNewItem = true)
+        public async Task SaveProdusAsync(Produs item, bool isNewItem)
         {
             Console.WriteLine(@"Am ajuns la URL");
             Uri uri = new Uri(string.Format(RestUrlPROD, string.Empty));
@@ -252,6 +329,7 @@ namespace Restaurant_Server.Data
                 }
                 else
                 {
+                    uri = new Uri(uri.ToString() + item.ID);
                     response = await client.PutAsync(uri, content);
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
@@ -266,7 +344,7 @@ namespace Restaurant_Server.Data
             }
         }
         // Salvare User
-        public async Task SaveUserAsync(User item, bool isNewItem = true)
+        public async Task SaveUserAsync(User item, bool isNewItem)
         {
             Console.WriteLine(@"Am ajuns la URLul pt user");
             Uri uri = new Uri(string.Format(RestUrlUSR, string.Empty));
@@ -285,6 +363,7 @@ namespace Restaurant_Server.Data
                 else
                 {
                     Console.WriteLine(@"Ceva PUT.");
+                    uri = new Uri(uri.ToString() + item.ID);
                     response = await client.PutAsync(uri, content);
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
@@ -299,7 +378,7 @@ namespace Restaurant_Server.Data
             }
         }
         //Salvare Masa
-        public async Task SaveMasaAsync(Masa item, bool isNewItem = true)
+        public async Task SaveMasaAsync(Masa item, bool isNewItem)
         {
             Console.WriteLine(@"Am ajuns la URL");
             Uri uri = new Uri(string.Format(RestUrlMASA, string.Empty));
@@ -314,6 +393,7 @@ namespace Restaurant_Server.Data
                 }
                 else
                 {
+                    uri = new Uri(uri.ToString() + item.ID);
                     response = await client.PutAsync(uri, content);
                 }
                 Console.WriteLine(response.IsSuccessStatusCode.ToString());
@@ -330,7 +410,7 @@ namespace Restaurant_Server.Data
         //Stergere Client
         public async Task DeleteClientAsync(int id)
         {
-            Uri uri = new Uri(string.Format(RestUrlCLI, id));
+            Uri uri = new Uri(RestUrlCLI + id.ToString());
             try
             {
                 HttpResponseMessage response = await client.DeleteAsync(uri);
@@ -347,7 +427,7 @@ namespace Restaurant_Server.Data
         //Stergere User
         public async Task DeleteUserAsync(int id)
         {
-            Uri uri = new Uri(string.Format(RestUrlUSR, id));
+            Uri uri = new Uri(RestUrlUSR+id.ToString());
             try
             {
                 HttpResponseMessage response = await client.DeleteAsync(uri);
@@ -364,10 +444,14 @@ namespace Restaurant_Server.Data
         //Stergere Fel de mancare
         public async Task DeleteFelAsync(int id)
         {
-            Uri uri = new Uri(string.Format(RestUrlFEL, id));
+            Console.WriteLine("Sa stergem felul");
+            Uri uri = new Uri(RestUrlFEL + id.ToString());
             try
             {
                 HttpResponseMessage response = await client.DeleteAsync(uri);
+                Console.WriteLine(response.IsSuccessStatusCode.ToString());
+                Console.WriteLine(response.RequestMessage.ToString());
+                Console.WriteLine(response.ReasonPhrase.ToString());
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine(@"Felul a fost sters");
@@ -381,7 +465,7 @@ namespace Restaurant_Server.Data
         //Stergere Fel de mancare
         public async Task DeleteProdusAsync(int id)
         {
-            Uri uri = new Uri(string.Format(RestUrlPROD, id));
+            Uri uri = new Uri(RestUrlPROD + id.ToString());
             try
             {
                 HttpResponseMessage response = await client.DeleteAsync(uri);
@@ -397,7 +481,7 @@ namespace Restaurant_Server.Data
         }
         public async Task DeleteMasaAsync(int id)
         {
-            Uri uri = new Uri(string.Format(RestUrlMASA, id));
+            Uri uri = new Uri(RestUrlMASA + id.ToString());
             try
             {
                 HttpResponseMessage response = await client.DeleteAsync(uri);
@@ -410,6 +494,72 @@ namespace Restaurant_Server.Data
             {
                 Console.WriteLine(@"Produsul nu poate fi sters", ex.Message);
             }
+        }
+        public async Task<List<Produs>> GetProduseFelAsync(int id)
+        {
+            Console.WriteLine("GetProduseFelAsync");
+            Console.WriteLine(id.ToString());
+            List<Produs> L2 = await GetProduseNUAsync(id);
+            Produse = await RefreshDataAsyncPROD();
+            List<Produs> Copie = new List<Produs>(Produse);
+            List<Produs> Copie2 = new List<Produs>(Produse);
+            foreach (Produs p in Produse)
+            {
+                Console.WriteLine(p.Denumire.ToString());
+            }
+            foreach (Produs p in Copie2)
+            {
+                Console.WriteLine(p.Denumire.ToString());
+            }
+            foreach (Produs p in L2)
+            {
+                Console.WriteLine(p.Denumire.ToString());
+                foreach (Produs p2 in Copie)
+                {
+                    if (p2.ID == p.ID)
+                    {
+                        Console.WriteLine("Am sters");
+                        Console.WriteLine(p2.Denumire.ToString());
+                        Copie2.Remove(p2);
+                    }
+                    else
+                    {
+                        Console.WriteLine("A ramas");
+                        Console.WriteLine(p2.Denumire.ToString());
+                    }
+                }
+            }
+            Console.WriteLine("Am terminat");
+            foreach(Produs p in Copie2)
+            {
+                Console.WriteLine(p.Denumire.ToString());
+            }    
+            return Copie2;
+        }
+        public async Task<List<Produs>> GetProduseNUAsync(int id)
+        {
+            Console.WriteLine("l");
+            Console.WriteLine("GetProduseNUAsync");
+            Console.WriteLine(id.ToString());
+            Produse = await RefreshDataAsyncPROD();
+            List<Fel_Prods> L = await RefreshDataAsyncFELP(id);
+            List<Produs> Copie = new List<Produs>(Produse);
+            Console.WriteLine("Aici");
+            foreach (Fel_Prods p in L)
+            {
+                Console.WriteLine(p.PID.ToString());
+            }
+            foreach (Fel_Prods fp in L)
+            {
+                Console.WriteLine("Felul de mancare cu id-ul");
+                Console.WriteLine(fp.PID);
+                foreach (Produs p in Copie)
+                {
+                    if (fp.PID == p.ID)
+                        Produse.Remove(p);
+                }
+            }
+            return Produse;
         }
     }
 }

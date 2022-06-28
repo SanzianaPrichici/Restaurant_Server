@@ -13,8 +13,8 @@ namespace Restaurant_Server
             InitializeComponent();
 
             Database = new LicentaDB(new RestService_S());
-            //MainPage = new MainPage();
-            MainPage = new AddMasa();
+            MainPage = new NavigationPage( new MainPage());
+            //MainPage = new AddFel();
             //MainPage = new Page1();
         }
 

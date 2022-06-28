@@ -14,5 +14,25 @@ namespace Restaurant_Server
         {
             InitializeComponent();
         }
+        async void Dishes (object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ListaFeluri());
+        }
+        async void Clients (object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ListaClienti());
+        }
+        async void Products(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ListaProduse());
+        }
+        async void Tables(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ListaMese());
+        }
+        async void Orders (object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ListaComenzi());
+        }
     }
 }

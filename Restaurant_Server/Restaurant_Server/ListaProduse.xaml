@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Restaurant_Server.ListaProduse">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Adăugare produs" Clicked="AddProduct" />
+    </ContentPage.ToolbarItems>
+    <StackLayout>
+        <ListView x:Name="listView" Margin="20" ItemSelected="Selectare">
+            <ListView.ItemTemplate >
+                <DataTemplate>
+                    <TextCell Text="{Binding Denumire}" Detail="{Binding Pret}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button x:Name="Modif" Text="Modificare" IsVisible="false" Clicked="Modificare"/>
+        <Button x:Name="Sterg" Text="Ștergere" IsVisible="false" Clicked="Stergere"/>
+    </StackLayout>
+</ContentPage>

@@ -23,18 +23,24 @@ namespace Restaurant_Server
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            listaProduse.ItemsSource = await App.Database.GetProduseAsync();
-            listaProduseFel.ItemsSource = new List<Produs>();
+            var f = (Fel_m)BindingContext;
+            txtnume.Text = f.Nume;
+            txtdurata.Text = f.Durata.ToString();
+            prettotal.Text = f.Pret.ToString();
+            listaProduse.ItemsSource = await App.Database.GetProduseNUAsync(f.ID);
+            listaProduseFel.ItemsSource = await App.Database.GetProduseFelAsync(f.ID);
+            Console.WriteLine("Am ieist din BD");
             float pretp = 0;
-            prettotal.Text = pretp.ToString();
             foreach (Produs p in listaProduseFel.ItemsSource)
             {
                 pretp += p.Pret;
             }
             pretproduse.Text = pretp.ToString();
+            txtadaos.Text = (f.Pret - pretp).ToString();
         }
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
+            Console.WriteLine("Item selectat lista1");
             if (e.SelectedItem != null)
             {
                 Produs prod = (Produs)e.SelectedItem;

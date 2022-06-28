@@ -22,6 +22,8 @@ namespace Restaurant_Server.Data
         Task DeleteFelAsync(int id);
         //Implementare PRODUSE
         Task<List<Produs>> RefreshDataAsyncPROD();
+        Task<List<Produs>> GetProduseFelAsync(int id);
+        Task<List<Produs>> GetProduseNUAsync(int id);
         Task SaveProdusAsync(Produs item, bool isNewItem);
         Task DeleteProdusAsync(int id);
         Task<List<Produs>> SortProduse(List<Produs> L,Produs P);
@@ -31,5 +33,7 @@ namespace Restaurant_Server.Data
         Task<List<Masa>> RefreshDataAsyncMASA();
         Task SaveMasaAsync(Masa item, bool isNewItem);
         Task DeleteMasaAsync(int id);
+        Task<List<Fel_Prods>> RefreshDataAsyncFELP(int id);
+        Task<List<Comanda>> RefreshDataAsyncCOM();
     }
 }

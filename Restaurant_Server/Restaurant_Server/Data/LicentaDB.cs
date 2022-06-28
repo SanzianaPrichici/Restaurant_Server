@@ -31,6 +31,21 @@ namespace Restaurant_Server.Data
             Console.Write(@"Al doilea pas in LicentaDB");
             return restService.RefreshDataAsyncPROD();
         }
+        public Task<List<Produs>> GetProduseFelAsync(int Fid)
+        {
+            Console.Write(@"Al doilea pas in LicentaDB");
+            return restService.GetProduseFelAsync(Fid);
+        }
+        public Task<List<Produs>> GetProduseNUAsync(int Fid)
+        {
+            Console.Write(@"Al doilea pas in LicentaDB");
+            return restService.GetProduseNUAsync(Fid);
+        }
+        public Task<List<Masa>> GetMesesync()
+        {
+            Console.Write(@"Al doilea pas in LicentaDB");
+            return restService.RefreshDataAsyncMASA();
+        }
         public Task<string> SaveClientAsync(Client item, bool isNewItem = true)
         {
             Console.WriteLine(@"Am ajuns in baza de date");
@@ -63,7 +78,12 @@ namespace Restaurant_Server.Data
         }
         public Task DeleteFeluriAsync(Fel_m item)
         {
+            Console.WriteLine(item.ID);
             return restService.DeleteFelAsync(item.ID);
+        }public Task DeleteMasaAsync(Masa item)
+        {
+            Console.WriteLine(item.ID);
+            return restService.DeleteMasaAsync(item.ID);
         }
         public Task DeleteProduseAsync(Produs item)
         {
@@ -76,6 +96,10 @@ namespace Restaurant_Server.Data
         public Task SaveMasaAsync(Masa item, bool isNewItem = true)
         {
             return restService.SaveMasaAsync(item, isNewItem);
+        }
+        public Task<List<Comanda>> GetComenziAsync()
+        {
+            return restService.RefreshDataAsyncCOM();
         }
     }
 }
